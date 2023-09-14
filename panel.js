@@ -1,4 +1,3 @@
-
 /*
     Author: Arijit Paria 
     Subscribe @tutoriex on youtube to get more such scripts
@@ -10,23 +9,75 @@
 
 chrome.devtools.network.onRequestFinished.addListener(function (request) {
   if (
-    request.request.url ==
+    request.request.url ===
     "https://api-ng2.myperfectice.com/api/v1/learningTest/getQuestion"
   ) {
     request.getContent(function (content, encoding) {
       var myobj = JSON.parse(content);
       console.log(myobj.answers);
-      
+
       var correctAnswers = myobj.answers.filter(function (item) {
         return item.isCorrectAnswer === true;
       });
 
       var answerText = correctAnswers[0].answerText; // Assuming there's only one object in the array
-      var textContent = answerText.replace(/<\/?p>/g, ''); // Remove <p> tags
+      var textContent = answerText.replace(/<\/?p>/g, ""); // Remove <p> tags
       console.log(textContent);
 
       // document.getElementById("text").value = JSON.stringify(myobj.answers);
-      document.getElementById("text").value = JSON.stringify(textContent.trim());
+      document.getElementById("text").value = JSON.stringify(
+        textContent.trim()
+      );
+      //Finding the correct Answere
+      let i = findCorrectAns(myobj.answers);
+      if (i != -1) {
+        console.log("Correct Answer is: " + i);
+        chrome.tabs.query(
+          { active: true, currentWindow: true },
+          function (tabs) {
+            var activeTab = tabs[0];
+            //Sending message to the active tab
+            chrome.tabs.sendMessage(activeTab.id, {
+              msg: "Sending Data",
+              keys: i,
+            });
+          }
+        );
+      }
+    });
+  } else if (
+    request.request.url.startsWith(
+      "https://api-ng2.myperfectice.com/api/v1/learningTest/getPracticeSet/"
+    )
+  ) {
+    request.getContent(function (content, encoding) {
+      var myobj = JSON.parse(content);
+      // console.log(myobj.answers);
+      var ans = myobj.question;
+      console.log(ans.answers);
+
+      // var correctAnswers = ans.answers.filter(function (item) {
+      //   return item.isCorrectAnswer === true;
+      // });
+
+      if (ans && ans.answers && Array.isArray(ans.answers)) {
+        var correctAnswers = ans.answers.filter(function (item) {
+          return item.isCorrectAnswer === true;
+        });
+
+        console.log(correctAnswers);
+      } else {
+        console.log("Invalid or missing answers array in the response.");
+      }
+
+      var answerText = correctAnswers[0].answerText; // Assuming there's only one object in the array
+      var textContent = answerText.replace(/<\/?p>/g, ""); // Remove <p> tags
+      console.log(textContent);
+
+      // document.getElementById("text").value = JSON.stringify(myobj.answers);
+      document.getElementById("text").value = JSON.stringify(
+        textContent.trim()
+      );
       //Finding the correct Answere
       let i = findCorrectAns(myobj.answers);
       if (i != -1) {
