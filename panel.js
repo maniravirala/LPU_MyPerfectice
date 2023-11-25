@@ -1,10 +1,3 @@
-/*
-    Author: Arijit Paria 
-    Subscribe @tutoriex on youtube to get more such scripts
-    Note:
-    This script is free to use, do not pay anyone anything.
-    To modify or redistribute, kindly follow the license agreement strictly.
-*/
 // document.getElementById("text").value
 
 chrome.devtools.network.onRequestFinished.addListener(function (request) {
@@ -24,13 +17,44 @@ chrome.devtools.network.onRequestFinished.addListener(function (request) {
       var textContent = answerText.replace(/<\/?p>/g, ""); // Remove <p> tags
       console.log(textContent);
 
-      // document.getElementById("text").value = JSON.stringify(myobj.answers);
-      document.getElementById("text").value = JSON.stringify(
-        textContent.trim()
-      );
-      //Finding the correct Answere
       let i = findCorrectAns(myobj.answers);
+
+      // document.getElementById("text").value = JSON.stringify(myobj.answers);
+      // document.getElementById("text").value = JSON.stringify(
+      //   textContent.trim()
+      // );
+
+
       if (i != -1) {
+        if (i == 0) {
+          document.getElementById("text").value = "A";
+        } else if (i == 1) {
+          document.getElementById("text").value = "B";
+        } else if (i == 2) {
+          document.getElementById("text").value = "C";
+        } else if (i == 3) {
+          document.getElementById("text").value = "D";
+        }
+
+        const selectButton = document.querySelector("#select");
+        const submitButton = document.querySelector("#submit");
+
+        selectButton.addEventListener("click", function () {
+          const answerElement = document.querySelector(
+            `#page-wrapper > p-student > app-learning-test > div.adaptive-question > div > div > div.adaptive-question-box.bg-white.p-1.ng-star-inserted > div:nth-child(2) > mcq-question > div > div.question-answers.mb-0 > div:nth-child(${i + 1}) > div > label`
+          );
+          console.log(i);
+    
+          if (answerElement) {
+            answerElement.click();
+            console.log("Clicked");
+          }
+        });
+        
+        submitButton.addEventListener("click", function () {
+          console.log("Submit Button Clicked");
+        });
+
         console.log("Correct Answer is: " + i);
         chrome.tabs.query(
           { active: true, currentWindow: true },

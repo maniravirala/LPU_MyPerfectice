@@ -15,31 +15,30 @@
       crossorigin="anonymous"
     />
     <script src="panel.js"></script>
-  </head>
-  <style>
 
-    img {
-      height: 60px;
-      width: 60px;
-      border-radius: 100px;
-      margin: 5px;
-    }
-  </style>
+    <style>
+      button {
+        background-color: #007bff;
+        border: none;
+      }
+      button:hover {
+        background-color: #005ec2;
+      }
+    </style>
+  </head>
   <body>
     <div class="container text-center p-3">
-      <div >
-
-        <img  src="icon.png" />
-      </div>
       <h1>MyPerfectice Automation</h1>
       
-      <div class="m-5 mani">
+      <div class="m-2 mani">
         <!-- generate an textarea -->
         <textarea
-          class="form-control"
+          class="form-control mb-3"
           id="text"
           rows="1"
-          placeholder="Enter your text here" value=""></textarea>        
+          placeholder="Enter your text here" value=""></textarea>     
+          <button id="select" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Select</button>
+          <button id="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Submit</button>   
     </div>
   </body>
 </html>
